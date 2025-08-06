@@ -7,6 +7,9 @@ all: fat
 	nasm -f bin bootloader/mbr.asm -o build/bootloader/mbr.o
 
 	dd if=build/bootloader/mbr.o of=build/$(IMAGE) conv=notrunc
+
+	mcopy -i build/$(IMAGE) build/test.txt "::test.txt"
+	mcopy -i build/$(IMAGE) build/test2.txt "::test2.txt"
 	
 
 

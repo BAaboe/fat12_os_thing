@@ -44,54 +44,168 @@ jmp 0x00:.aligned
 
 .aligned:
 
-
-pusha
-mov dl, 0x00
-call load_file
-popa
- 
-cli
-hlt
-
-;
-; Loads a flie from the file system
-; ax: pointer to the string with the file name
-; dx: drive number
-; es:bx: place in memory to place the file
-; 
-load_file:
-push ax
+; Save the drive number
+mov [drive_number], dl
 
 ; Find the first cluster
-
-push dx
+; Read the root directory into memory
 
 ; Find what sector the root directory is on
+; ax = ReservedSectors + NumberOfFats*SectorsPerFat
 xor ax, ax
 mov ax, [BPB_SectorsPerFat]
 mul byte [BPB_NumberOfFats]
 add ax, word [BPB_ReservedSectors]
 
 ; Find how many sectors the root directory is
-push ax
+push ax ; Save ax since mul and div uses ax
+; di = (RootEntries*32 + BytesPerSector-1)/BytesPerSector
 mov ax, word [BPB_RootEntries]
-push cx
 mov cx, 32
 mul cx
-pop cx
 add ax, word [BPB_BytesPerSector]
 dec ax
 div word [BPB_BytesPerSector]
 mov di, ax
+
+mov dl, byte [drive_number]
+
+; Restor ax
 pop ax
 
-mov bx, 0x7e00
-
-pop dx
+mov bx, buffer
 
 call read_sectors
 
-call happy
+; Find entry for correct file
+
+mov di, buffer
+
+mov dx, word [BPB_RootEntries]
+.lookup_loop:
+mov si, file_name
+mov cx, 11
+push di
+cld
+repe cmpsb
+pop di
+jz .found
+
+add di, 32
+dec dx
+test dx, dx
+jnz .lookup_loop
+
+.not_found:
+mov ax, file_not_found
+call print
+cli
+hlt
+
+.found:
+; File entry should be at ES:DI
+; read file into memory
+mov ax, [di + 0x1a]
+mov [cluster], ax
+
+; Read fat into memory
+mov ax, word [BPB_ReservedSectors]
+mov dl, byte [drive_number]
+mov di, word [BPB_SectorsPerFat]
+mov bx, buffer
+call read_sectors
+
+
+; Load current cluster into memory
+
+mov ax, file_memory_seg
+mov es, ax
+mov bx, file_memory_offset
+
+.cluster_loop:
+
+; Calculate where the data region starts
+; First find the where the root directory is
+mov ax, word [BPB_SectorsPerFat]
+mul byte [BPB_NumberOfFats]
+add ax, word [BPB_ReservedSectors]
+push ax
+
+; Find how many sectors the root directory is
+; di = (RootEntries*32 + BytesPerSector-1)/BytesPerSector
+mov ax, word [BPB_RootEntries]
+mov cx, 32
+mul cx
+add ax, word [BPB_BytesPerSector]
+dec ax
+div word [BPB_BytesPerSector]
+
+; Add them togheter and you get where the data region starts
+pop dx
+add ax, dx
+
+add ax, word [cluster]
+add ax, -2
+
+mov dl, byte [drive_number]
+mov di, word [BPB_SectorsPerCluster]
+; Only want a byte
+and di, 0xff
+
+call read_sectors
+
+; Find offset into the fat table. cluster*1.5
+mov ax, word [cluster]
+shr ax, 1
+add ax, word [cluster]
+
+; Load the correct word into ax
+push bx
+mov bx, buffer
+add bx, ax
+mov ax, word [bx]
+pop bx
+push ax
+
+; If the cluster number is even we read the current byte plus half of the next
+; If the cluster number is odd we read half of the current byte plus the next byte
+mov ax, [cluster]
+and ax, 1
+test ax, ax
+
+jz .even
+
+.odd:
+pop ax
+shr ax, 4
+jmp .eo_done
+
+.even:
+pop ax
+and ax, 0xfff
+
+.eo_done:
+
+; Save the new cluster number
+mov word [cluster], ax
+
+; Increment the pointer to the data
+; TODO: Increment segment if needed
+xor ax, ax
+mov al, byte [BPB_SectorsPerCluster]
+mul word [BPB_BytesPerSector]
+add bx, ax
+
+; Check if end of file
+mov ax, word [cluster]
+cmp ax, 0x0ff8
+jl .cluster_loop
+
+mov ax, file_memory_seg
+mov ds, ax
+xor ax, ax
+call print
+
 
 cli 
 hlt
@@ -110,6 +224,7 @@ push dx
 
 call lba_to_chs
 
+
 pop ax
 mov dl, al
 
@@ -127,6 +242,8 @@ dec di
 add bx, [BPB_BytesPerSector]
 
 pop ax
+inc ax
+
 
 test di, di
 jz .loop
@@ -151,6 +268,7 @@ mov cx, dx
 inc cx
 
 ; Get the head number
+xor dx, dx
 div word [BPB_NumberOfHeads]
 mov dh, dl
 
@@ -163,31 +281,34 @@ ret
 
 ;
 ; Prints
-; ax: string
+; ds:ax: string
 ;
 print:
-mov bx, ax
+mov si, ax
 .loop:
-cmp byte [bx], 0
+lodsb
+cmp al, 0
 jz .done
 
 mov ah, 0x0e
-mov al, byte [bx]
 
-push bx
 xor bx, bx
 
 int 0x10
 
-pop bx
-
-inc bx
 jmp .loop
 
 .done:
+mov ah, 0x0e
+mov al, 10
+int 0x10
+mov al, 0x0d
+int 0x10
 ret
 
 disk_error:
+xor ax, ax
+mov ds, ax
 mov ax, disk_read_error_msg
 call print
 
@@ -202,5 +323,15 @@ ret
 
 disk_read_error_msg: db "Could not read disk",0
 happy_msg: db ":)", 0
+file_not_found: db "File not found", 0
+file_name: db "TEST2   TXT", 0
+drive_number: db 0
+cluster: dw 0
+
+file_memory_seg equ 0x200
+file_memory_offset equ 0
+
 times 510-($-$$) db 0
 db 0x55, 0xaa
+
+buffer:

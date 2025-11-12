@@ -1,22 +1,34 @@
+CC := ~/opt/cross/bin/i686-elf-gcc
+CCFLAGS := -ffreestanding -nostdlib -nostartfiles -fno-stack-protector -fno-PIC -g -I include/ -m32 -T kernel/kernel.ld
+CFILES := kernel/main.c kernel/print.c
+
 IMAGE := fat_bilde.img
 
-.phony: all fat
+.PHONY: all fat kernel bootloader
 
-all: fat
-	mkdir -p build/bootloader
-	nasm -f bin bootloader/mbr.asm -o build/bootloader/mbr.o
+all: fat bootloader kernel
+	dd if=build/bootloader/bootloader.o of=build/$(IMAGE) conv=notrunc
 
-	dd if=build/bootloader/mbr.o of=build/$(IMAGE) conv=notrunc
-
-	mcopy -i build/$(IMAGE) build/test.txt "::test.txt"
-	mcopy -i build/$(IMAGE) build/test2.txt "::test2.txt"
+	mcopy -i build/$(IMAGE) build/kernel/kernel.bin "::kernel.bin"
 	
 
+kernel:
+	mkdir -p build/kernel
+
+	nasm -f elf32 kernel/kernel_entry.asm -o build/kernel/kernel_entry.o
+
+	$(CC) $(CCFLAGS) build/kernel/kernel_entry.o $(CFILES) -o build/kernel/kernel.bin
+
+
+
+bootloader:
+	mkdir -p build/bootloader
+	nasm -f bin bootloader/bootloader.asm -o build/bootloader/bootloader.o
 
 fat:
 	mkdir -p build
 	dd if=/dev/zero of=build/$(IMAGE) bs=512 count=2880 conv=notrunc
-	mkfs.fat build/$(IMAGE)
+	mkfs.fat -F12 -R 4 build/$(IMAGE)
 
 run: all
-	qemu-system-x86_64 -drive file=build/fat_bilde.img,if=floppy,format=raw
+	qemu-system-x86_64 -drive file=build/fat_bilde.img,if=floppy,format=raw -debugcon stdio

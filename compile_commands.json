@@ -1,0 +1,38 @@
+[
+  {
+    "arguments": [
+      "/home/benja/opt/cross/bin/i686-elf-gcc",
+      "-c",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-I",
+      "include/",
+      "-m32",
+      "build/kernel/kernel_entry.o",
+      "-o",
+      "build/kernel/kernel.bin",
+      "kernel/main.c"
+    ],
+    "directory": "/home/benja/Documents/dev/fat12_mbr",
+    "file": "/home/benja/Documents/dev/fat12_mbr/kernel/main.c",
+    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/kernel.bin"
+  },
+  {
+    "arguments": [
+      "/home/benja/opt/cross/bin/i686-elf-gcc",
+      "-c",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-I",
+      "include/",
+      "-m32",
+      "build/kernel/kernel_entry.o",
+      "-o",
+      "build/kernel/kernel.bin",
+      "kernel/print.c"
+    ],
+    "directory": "/home/benja/Documents/dev/fat12_mbr",
+    "file": "/home/benja/Documents/dev/fat12_mbr/kernel/print.c",
+    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/kernel.bin"
+  }
+]

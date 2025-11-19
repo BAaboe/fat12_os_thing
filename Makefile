@@ -1,6 +1,6 @@
 CC := ~/opt/cross/bin/i686-elf-gcc
 CCFLAGS := -ffreestanding -nostdlib -nostartfiles -fno-stack-protector -fno-PIC -g -I include/ -m32 -T kernel/kernel.ld
-CFILES := kernel/main.c kernel/print.c
+CFILES := kernel/main.c kernel/print.c kernel/idt/idt.c kernel/idt/error_handler.c kernel/pic.c
 
 IMAGE := fat_bilde.img
 
@@ -14,10 +14,12 @@ all: fat bootloader kernel
 
 kernel:
 	mkdir -p build/kernel
+	mkdir -p build/kernel/idt
 
 	nasm -f elf32 kernel/kernel_entry.asm -o build/kernel/kernel_entry.o
+	nasm -f elf32 kernel/idt/error_handlers.asm -o build/kernel/idt/error_handlers.o
 
-	$(CC) $(CCFLAGS) build/kernel/kernel_entry.o $(CFILES) -o build/kernel/kernel.bin
+	$(CC) $(CCFLAGS) build/kernel/kernel_entry.o build/kernel/idt/error_handlers.o $(CFILES) -o build/kernel/kernel.bin
 
 
 

@@ -1,5 +1,7 @@
 #include <stdint.h>
 
+#include "idt/idt.h"
+#include "pic.h"
 #include "print.h"
 #include "util.h"
 
@@ -9,7 +11,15 @@ void debug_print(char *string) {
     }
 }
 
+void setup() {
+    setUpIDT();
+    PIC_remap(22, 28);
+    PIC_disable();
+    __asm__ __volatile__("sti");
+}
+
 void kernel() {
+    setup();
     init_screen();
-    print_string("BenjiOS", 0x0a);
+    int a = 1 / 0;
 }

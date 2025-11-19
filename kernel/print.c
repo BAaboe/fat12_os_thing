@@ -17,7 +17,7 @@ void init_screen(void) {
     for (unsigned int i = 0; i < CHARACTERS_PER_LINE * LINES; i++) {
         buffer[i] = 0x0020;
     }
-    // update_screen();
+    update_screen();
 }
 
 void update_screen(void) {

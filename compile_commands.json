@@ -5,10 +5,13 @@
       "-c",
       "-ffreestanding",
       "-fno-stack-protector",
+      "-fno-PIC",
+      "-g",
       "-I",
       "include/",
       "-m32",
       "build/kernel/kernel_entry.o",
+      "build/kernel/idt/error_handlers.o",
       "-o",
       "build/kernel/kernel.bin",
       "kernel/main.c"
@@ -23,16 +26,61 @@
       "-c",
       "-ffreestanding",
       "-fno-stack-protector",
+      "-fno-PIC",
+      "-g",
       "-I",
       "include/",
       "-m32",
       "build/kernel/kernel_entry.o",
+      "build/kernel/idt/error_handlers.o",
       "-o",
       "build/kernel/kernel.bin",
       "kernel/print.c"
     ],
     "directory": "/home/benja/Documents/dev/fat12_mbr",
     "file": "/home/benja/Documents/dev/fat12_mbr/kernel/print.c",
+    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/kernel.bin"
+  },
+  {
+    "arguments": [
+      "/home/benja/opt/cross/bin/i686-elf-gcc",
+      "-c",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-fno-PIC",
+      "-g",
+      "-I",
+      "include/",
+      "-m32",
+      "build/kernel/kernel_entry.o",
+      "build/kernel/idt/error_handlers.o",
+      "-o",
+      "build/kernel/kernel.bin",
+      "kernel/idt/idt.c"
+    ],
+    "directory": "/home/benja/Documents/dev/fat12_mbr",
+    "file": "/home/benja/Documents/dev/fat12_mbr/kernel/idt/idt.c",
+    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/kernel.bin"
+  },
+  {
+    "arguments": [
+      "/home/benja/opt/cross/bin/i686-elf-gcc",
+      "-c",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-fno-PIC",
+      "-g",
+      "-I",
+      "include/",
+      "-m32",
+      "build/kernel/kernel_entry.o",
+      "build/kernel/idt/error_handlers.o",
+      "-o",
+      "build/kernel/kernel.bin",
+      "kernel/idt/error_handler.c"
+    ],
+    "directory": "/home/benja/Documents/dev/fat12_mbr",
+    "file": "/home/benja/Documents/dev/fat12_mbr/kernel/idt/error_handler.c",
     "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/kernel.bin"
   }
 ]

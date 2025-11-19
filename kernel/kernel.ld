@@ -1,6 +1,6 @@
 OUTPUT_FORMAT("binary")
 ENTRY(kernel_entry)
-phys = 0x00001000;
+phys = 0x00010000;
 SECTIONS
 {
 	.text (phys) : {*(.text)}

@@ -104,6 +104,7 @@ mov di, word [BPB_SectorsPerCluster]
 ; Only want a byte
 and di, 0xff
 
+push bx
 call read_sectors
 
 ; Find offset into the fat table. cluster*1.5
@@ -112,7 +113,6 @@ shr ax, 1
 add ax, word [cluster]
 
 ; Load the correct word into ax
-push bx
 mov bx, buffer
 add bx, ax
 mov ax, word [bx]
@@ -130,6 +130,7 @@ jz .even
 .odd:
 pop ax
 shr ax, 4
+and ax, 0xfff
 jmp .eo_done
 
 .even:
@@ -145,6 +146,7 @@ mov word [cluster], ax
 xor ax, ax
 mov al, byte [BPB_SectorsPerCluster]
 mul word [BPB_BytesPerSector]
+
 add bx, ax
 jnc .no_overflow
 
@@ -160,8 +162,9 @@ mov ax, word [cluster]
 cmp ax, 0x0ff8
 jl .cluster_loop
 
+
 ret
 
-file_memory_seg equ 0x0100
+file_memory_seg equ 0x1000
 file_memory_offset equ 0x0000
 file_name: db "KERNEL  BIN", 0

@@ -50,6 +50,10 @@ void scroll_up(int n) {
 
 void print_string(char *string, uint8_t color) {
     while (*string != 0) {
+        if (cursor_y >= LINES) {
+            scroll_up(1);
+            cursor_y--;
+        }
         if (*string == '\n') {
             cursor_y++;
             cursor_x = 0;

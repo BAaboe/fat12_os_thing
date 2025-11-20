@@ -1,7 +1,7 @@
 #include <stdint.h>
 
 #include "idt/idt.h"
-#include "pic.h"
+#include "pic/pic.h"
 #include "print.h"
 #include "util.h"
 
@@ -13,13 +13,16 @@ void debug_print(char *string) {
 
 void setup() {
     setUpIDT();
-    PIC_remap(22, 28);
-    PIC_disable();
+    PIC_remap(32, 40);
+    // PIC_disable();
     __asm__ __volatile__("sti");
 }
 
 void kernel() {
     setup();
     init_screen();
-    int a = 1 / 0;
+    print_string("Hello, Wolrd!", 0x0e);
+
+    while (1) {
+    }
 }

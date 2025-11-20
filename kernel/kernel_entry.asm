@@ -7,4 +7,5 @@ kernel_entry:
 
 call kernel
 
+cli
 hlt

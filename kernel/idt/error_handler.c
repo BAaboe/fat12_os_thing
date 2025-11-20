@@ -74,4 +74,5 @@ void error_handler(uint32_t error) {
         print_string("Something is wrong", 0x04);
         break;
     }
+    return;
 }

@@ -1,5 +1,5 @@
 // Copied from osdev, no reason to do work thats already done
-#include "pic.h"
+#include "pic/pic.h"
 #include "util.h"
 #include <stdint.h>
 
@@ -50,8 +50,8 @@ void PIC_remap(uint8_t offset1, uint8_t offset2) {
     io_wait();
 
     // Unmask both PICs.
-    outb(PIC1_DATA, 0);
-    outb(PIC2_DATA, 0);
+    outb(PIC1_DATA, 0xfc);
+    outb(PIC2_DATA, 0xff);
 }
 
 void PIC_disable(void) {

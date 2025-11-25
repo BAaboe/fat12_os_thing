@@ -199,6 +199,11 @@ call load_kernel
 ;Use bios to find info about system
 ;TODO
 
+; Set VGA video mode
+mov ah, 0x00
+mov al, 0x13
+int 0x10
+
 ;Enter 32 bit
 cli
 cld

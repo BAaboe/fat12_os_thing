@@ -1,15 +1,10 @@
 #include <stdint.h>
 
+#include "drivers/vga.h"
 #include "idt/idt.h"
 #include "pic/pic.h"
 #include "print.h"
 #include "util.h"
-
-void debug_print(char *string) {
-    while (*string != 0) {
-        outb(0xe9, *string++);
-    }
-}
 
 void setup() {
     setUpIDT();
@@ -20,8 +15,9 @@ void setup() {
 
 void kernel() {
     setup();
-    init_screen();
-    print_string("Hello, Wolrd!", 0x0e);
+    vga_init();
+    vga_flip();
+    print_string("Hello, World\nTest", 0x01, 0, 0);
 
     while (1) {
     }

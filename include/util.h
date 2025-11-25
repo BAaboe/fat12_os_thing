@@ -16,5 +16,7 @@ static inline void io_wait(void) {
     outb(0x80, 0);
 }
 
+void debug_print(char *string);
+
 #endif // !UTIL_h
 

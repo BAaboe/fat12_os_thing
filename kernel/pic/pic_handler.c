@@ -12,7 +12,8 @@ void pic_handler(uint16_t num) {
         irq_tick();
         break;
     case 1:
-        print_string("B", 0x0a);
+        print_string("Keyboard pressed", 0x0a, 0, 0);
+        inb(0x60);
         break;
     default:
         break;

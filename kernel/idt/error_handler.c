@@ -23,55 +23,55 @@ typedef enum {
 void error_handler(uint32_t error) {
     switch ((ERROR_TYPE)error) {
     case DIVIDEBYZERO:
-        print_string("Divide by zero", 0x04);
+        print_string("Divide by zero", 0x04, 0, 0);
         break;
     case DEBUGEXCEPTION:
-        print_string("Debug exception", 0x04);
+        print_string("Debug exception", 0x04, 0, 0);
         break;
     case NMI:
-        print_string("NMI", 0x04);
+        print_string("NMI", 0x04, 0, 0);
         break;
     case BREAKPOINT:
-        print_string("Breakpoint", 0x04);
+        print_string("Breakpoint", 0x04, 0, 0);
         break;
     case OVERFLOW:
-        print_string("Overflow", 0x04);
+        print_string("Overflow", 0x04, 0, 0);
         break;
     case BOUND:
-        print_string("Bound", 0x04);
+        print_string("Bound", 0x04, 0, 0);
         break;
     case INVALIDOPCODE:
-        print_string("Invalid opcode", 0x04);
+        print_string("Invalid opcode", 0x04, 0, 0);
         break;
     case DEVICENOTAVAILABLE:
-        print_string("Device not available", 0x04);
+        print_string("Device not available", 0x04, 0, 0);
         break;
     case DOUBLEFAULT:
-        print_string("Double fault", 0x04);
+        print_string("Double fault", 0x04, 0, 0);
         break;
     case COREPROCESSOROVERRUN:
-        print_string("Coreprocess overun", 0x04);
+        print_string("Coreprocess overun", 0x04, 0, 0);
         break;
     case INVALIDTSS:
-        print_string("Invalid TSS", 0x04);
+        print_string("Invalid TSS", 0x04, 0, 0);
         break;
     case SEGMENTNOTPRESENT:
-        print_string("Segment not present", 0x04);
+        print_string("Segment not present", 0x04, 0, 0);
         break;
     case STACKSEGMENTFAULT:
-        print_string("Stack-Segment fault", 0x04);
+        print_string("Stack-Segment fault", 0x04, 0, 0);
         break;
     case GENEALPROTECTION:
-        print_string("General protection", 0x04);
+        print_string("General protection", 0x04, 0, 0);
         break;
     case PAGEFAULT:
-        print_string("Page fualt", 0x04);
+        print_string("Page fualt", 0x04, 0, 0);
         break;
     case CONTROLPROTECTIONEXCEPTION:
-        print_string("Control protection exception", 0x04);
+        print_string("Control protection exception", 0x04, 0, 0);
         break;
     default:
-        print_string("Something is wrong", 0x04);
+        print_string("Something is wrong", 0x04, 0, 0);
         break;
     }
     return;

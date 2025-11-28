@@ -50,8 +50,8 @@ void PIC_remap(uint8_t offset1, uint8_t offset2) {
     io_wait();
 
     // Unmask both PICs.
-    outb(PIC1_DATA, 0xfc);
-    outb(PIC2_DATA, 0xff);
+    outb(PIC1_DATA, 0x00);
+    outb(PIC2_DATA, 0x00);
 }
 
 void PIC_disable(void) {

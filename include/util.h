@@ -2,6 +2,13 @@
 #ifndef UTIL_H
 #define UTIL_H
 #include <stdint.h>
+
+typedef struct {
+    int cylinder;
+    int head;
+    int sector;
+} CHS;
+
 static inline void outb(uint16_t port, uint8_t val) {
     __asm__ volatile("outb %b0, %w1" : : "a"(val), "Nd"(port) : "memory");
 }
@@ -12,9 +19,10 @@ static inline uint8_t inb(uint16_t port) {
     return ret;
 }
 
-static inline void io_wait(void) {
-    outb(0x80, 0);
-}
+static inline void io_wait(void) { outb(0x80, 0); }
 
+CHS lba_to_chs(int lba, int spt, int hpc);
+
+void debug_print(char *string);
 #endif // !UTIL_h
 

@@ -1,3 +1,4 @@
+#include "drivers/floppy.h"
 #include "pic/pic.h"
 #include "print.h"
 #include "time.h"
@@ -12,8 +13,11 @@ void pic_handler(uint16_t num) {
         irq_tick();
         break;
     case 1:
-        print_string("B", 0x0a);
+        inb(0x60);
         break;
+
+    case 6:
+        irq6_handler();
     default:
         break;
     }

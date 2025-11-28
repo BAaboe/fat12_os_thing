@@ -8,7 +8,7 @@ static volatile uint8_t IRQ6 = 0;
 static uint8_t current_drive = 0;
 static uint8_t motor_on[2] = {0, 0};
 
-void floppy_read(size_t lba, size_t address, size_t size, uint8_t drive) {
+void floppy_read(size_t lba, size_t address, size_t nblocks, uint8_t drive) {
 
     // Setting up DMA
     outb(0x0A, 0x06); // Mask DRQ
@@ -16,8 +16,8 @@ void floppy_read(size_t lba, size_t address, size_t size, uint8_t drive) {
     outb(0x04, (uint8_t)address);
     outb(0x04, (uint8_t)(address >> 8));
     outb(0x0c, 0xff); // Reseting flip-flop
-    outb(0x05, (uint8_t)(size - 1));
-    outb(0x05, (uint8_t)(((size - 1)) >> 8));
+    outb(0x05, (uint8_t)(nblocks * 512 - 1));
+    outb(0x05, (uint8_t)(((nblocks * 512 - 1)) >> 8));
     outb(0x81, address >> 16);
     outb(0x0b, 0b01010110); // DMA mode
     outb(0x0A, 0x02);       // Unmask DRQ
@@ -212,11 +212,9 @@ void floppy_reset() {
     }
 }
 void wait_for_irq() {
-    print_string("Waiting for irq\n", 0x0e);
     while (!IRQ6) {
     }
     IRQ6 = 0;
-    print_string("Got irq\n", 0x0e);
 }
 
 uint16_t floppy_send_command(uint8_t command) {

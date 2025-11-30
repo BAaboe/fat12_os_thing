@@ -49,6 +49,45 @@ aligned:
 ; Save the drive number
 mov [BPB_DriveNumber], dl
 
+; Get disk geometry
+test dl, 0x80
+jnz .hard_drive
+
+.floppy_drive:
+mov [BPB_TotalSectors], word 2880
+mov [BPB_SectorsPerTrack], 18
+mov [BPB_NumberOfHeads], 2
+jmp .geometry_done
+
+.hard_drive:
+mov di, 0x00
+mov dl, [BPB_DriveNumber]
+mov ah, 0x08
+int 0x13
+
+inc dh
+mov [BPB_NumberOfHeads], dh
+
+mov ax, cx
+and cx, 0x3f
+mov [BPB_SectorsPerTrack], cl
+
+xor cx, cx
+mov cl, ah
+shr al, 6
+mov ch, al
+inc cx
+
+mov ax, [BPB_SectorsPerTrack]
+mul cx
+mov cx, [BPB_NumberOfHeads]
+mul cx
+mov [BPB_TotalSectors], ax
+
+
+.geometry_done:
+
+mov dl, [BPB_DriveNumber]
 mov ax, 1
 mov di, 3
 mov bx, 0x7e00
@@ -78,6 +117,7 @@ mov dl, al
 
 mov ah, 0x02
 mov al, 1
+
 
 pusha
 int 0x13

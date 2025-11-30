@@ -2,7 +2,6 @@
   {
     "arguments": [
       "/home/benja/opt/cross/bin/i686-elf-gcc",
-      "-c",
       "-ffreestanding",
       "-fno-stack-protector",
       "-fno-PIC",
@@ -10,20 +9,18 @@
       "-I",
       "include/",
       "-m32",
-      "build/kernel/kernel_entry.o",
-      "build/kernel/idt/error_handlers.o",
+      "-c",
       "-o",
-      "build/kernel/kernel.bin",
+      "build/kernel/main.o",
       "kernel/main.c"
     ],
     "directory": "/home/benja/Documents/dev/fat12_mbr",
     "file": "/home/benja/Documents/dev/fat12_mbr/kernel/main.c",
-    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/kernel.bin"
+    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/main.o"
   },
   {
     "arguments": [
       "/home/benja/opt/cross/bin/i686-elf-gcc",
-      "-c",
       "-ffreestanding",
       "-fno-stack-protector",
       "-fno-PIC",
@@ -31,20 +28,18 @@
       "-I",
       "include/",
       "-m32",
-      "build/kernel/kernel_entry.o",
-      "build/kernel/idt/error_handlers.o",
+      "-c",
       "-o",
-      "build/kernel/kernel.bin",
+      "build/kernel/print.o",
       "kernel/print.c"
     ],
     "directory": "/home/benja/Documents/dev/fat12_mbr",
     "file": "/home/benja/Documents/dev/fat12_mbr/kernel/print.c",
-    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/kernel.bin"
+    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/print.o"
   },
   {
     "arguments": [
       "/home/benja/opt/cross/bin/i686-elf-gcc",
-      "-c",
       "-ffreestanding",
       "-fno-stack-protector",
       "-fno-PIC",
@@ -52,20 +47,18 @@
       "-I",
       "include/",
       "-m32",
-      "build/kernel/kernel_entry.o",
-      "build/kernel/idt/error_handlers.o",
+      "-c",
       "-o",
-      "build/kernel/kernel.bin",
-      "kernel/idt/idt.c"
+      "build/kernel/time.o",
+      "kernel/time.c"
     ],
     "directory": "/home/benja/Documents/dev/fat12_mbr",
-    "file": "/home/benja/Documents/dev/fat12_mbr/kernel/idt/idt.c",
-    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/kernel.bin"
+    "file": "/home/benja/Documents/dev/fat12_mbr/kernel/time.c",
+    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/time.o"
   },
   {
     "arguments": [
       "/home/benja/opt/cross/bin/i686-elf-gcc",
-      "-c",
       "-ffreestanding",
       "-fno-stack-protector",
       "-fno-PIC",
@@ -73,14 +66,108 @@
       "-I",
       "include/",
       "-m32",
-      "build/kernel/kernel_entry.o",
-      "build/kernel/idt/error_handlers.o",
+      "-c",
       "-o",
-      "build/kernel/kernel.bin",
+      "build/kernel/util.o",
+      "kernel/util.c"
+    ],
+    "directory": "/home/benja/Documents/dev/fat12_mbr",
+    "file": "/home/benja/Documents/dev/fat12_mbr/kernel/util.c",
+    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/util.o"
+  },
+  {
+    "arguments": [
+      "/home/benja/opt/cross/bin/i686-elf-gcc",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-fno-PIC",
+      "-g",
+      "-I",
+      "include/",
+      "-m32",
+      "-c",
+      "-o",
+      "build/kernel/drivers/floppy.o",
+      "kernel/drivers/floppy.c"
+    ],
+    "directory": "/home/benja/Documents/dev/fat12_mbr",
+    "file": "/home/benja/Documents/dev/fat12_mbr/kernel/drivers/floppy.c",
+    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/drivers/floppy.o"
+  },
+  {
+    "arguments": [
+      "/home/benja/opt/cross/bin/i686-elf-gcc",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-fno-PIC",
+      "-g",
+      "-I",
+      "include/",
+      "-m32",
+      "-c",
+      "-o",
+      "build/kernel/idt/error_handler.o",
       "kernel/idt/error_handler.c"
     ],
     "directory": "/home/benja/Documents/dev/fat12_mbr",
     "file": "/home/benja/Documents/dev/fat12_mbr/kernel/idt/error_handler.c",
-    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/kernel.bin"
+    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/idt/error_handler.o"
+  },
+  {
+    "arguments": [
+      "/home/benja/opt/cross/bin/i686-elf-gcc",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-fno-PIC",
+      "-g",
+      "-I",
+      "include/",
+      "-m32",
+      "-c",
+      "-o",
+      "build/kernel/idt/idt.o",
+      "kernel/idt/idt.c"
+    ],
+    "directory": "/home/benja/Documents/dev/fat12_mbr",
+    "file": "/home/benja/Documents/dev/fat12_mbr/kernel/idt/idt.c",
+    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/idt/idt.o"
+  },
+  {
+    "arguments": [
+      "/home/benja/opt/cross/bin/i686-elf-gcc",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-fno-PIC",
+      "-g",
+      "-I",
+      "include/",
+      "-m32",
+      "-c",
+      "-o",
+      "build/kernel/pic/pic.o",
+      "kernel/pic/pic.c"
+    ],
+    "directory": "/home/benja/Documents/dev/fat12_mbr",
+    "file": "/home/benja/Documents/dev/fat12_mbr/kernel/pic/pic.c",
+    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/pic/pic.o"
+  },
+  {
+    "arguments": [
+      "/home/benja/opt/cross/bin/i686-elf-gcc",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-fno-PIC",
+      "-g",
+      "-I",
+      "include/",
+      "-m32",
+      "-c",
+      "-o",
+      "build/kernel/pic/pic_handler.o",
+      "kernel/pic/pic_handler.c"
+    ],
+    "directory": "/home/benja/Documents/dev/fat12_mbr",
+    "file": "/home/benja/Documents/dev/fat12_mbr/kernel/pic/pic_handler.c",
+    "output": "/home/benja/Documents/dev/fat12_mbr/build/kernel/pic/pic_handler.o"
   }
 ]

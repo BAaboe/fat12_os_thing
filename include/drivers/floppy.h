@@ -11,41 +11,58 @@
 #define FLOPPY_TIMEOUT_LIMIT 4000
 
 // Copied from https://wiki.osdev.org/Floppy_Disk_Controller
-enum FloppyCommands {
-    READ_TRACK = 2, // generates IRQ6
-    SPECIFY = 3,    // * set drive parameters
-    SENSE_DRIVE_STATUS = 4,
-    WRITE_DATA = 5,      // * write to the disk
-    READ_DATA = 6,       // * read from the disk
-    RECALIBRATE = 7,     // * seek to cylinder 0
-    SENSE_INTERRUPT = 8, // * ack IRQ6, get status of last command
-    WRITE_DELETED_DATA = 9,
-    READ_ID = 10, // generates IRQ6
-    READ_DELETED_DATA = 12,
-    FORMAT_TRACK = 13, // *
-    DUMPREG = 14,
-    SEEK = 15,    // * seek both heads to cylinder X
-    VERSION = 16, // * used during initialization, once
-    SCAN_EQUAL = 17,
-    PERPENDICULAR_MODE = 18, // * used during initialization, once, maybe
-    CONFIGURE = 19,          // * set controller parameters
-    LOCK = 20,               // * protect controller params from a reset
-    VERIFY = 22,
-    SCAN_LOW_OR_EQUAL = 25,
-    SCAN_HIGH_OR_EQUAL = 29
-};
+#define FDC_READ_TRACK 2 // generates IRQ6
+#define FDC_SPECIFY 3    // * set drive parameters
+#define FDC_SENSE_DRIVE_STATUS 4
+#define FDC_WRITE_DATA 5      // * write to the disk
+#define FDC_READ_DATA 6       // * read from the disk
+#define FDC_RECALIBRATE 7     // * seek to cylinder 0
+#define FDC_SENSE_INTERRUPT 8 // * ack IRQ6, get status of last command
+#define FDC_WRITE_DELETED_DATA 9
+#define FDC_READ_ID 10 // generates IRQ6
+#define FDC_READ_DELETED_DATA 12
+#define FDC_FORMAT_TRACK 13 // *
+#define FDC_DUMPREG 14
+#define FDC_SEEK 15    // * seek both heads to cylinder X
+#define FDC_VERSION 16 // * used during initialization, once
+#define FDC_SCAN_EQUAL 17
+#define FDC_PERPENDICULAR_MODE 18 // * used during initialization, once, maybe
+#define FDC_CONFIGURE 19          // * set controller parameters
+#define FDC_LOCK 20               // * protect controller params from a reset
+#define FDC_VERIFY 22
+#define FDC_SCAN_LOW_OR_EQUAL 25
+#define FDC_SCAN_HIGH_OR_EQUAL 29
 
-enum FloppyRegisters {
-    STATUS_REGISTER_A = 0x3F0, // read-only
-    STATUS_REGISTER_B = 0x3F1, // read-only
-    DIGITAL_OUTPUT_REGISTER = 0x3F2,
-    TAPE_DRIVE_REGISTER = 0x3F3,
-    MAIN_STATUS_REGISTER = 0x3F4,     // read-only
-    DATARATE_SELECT_REGISTER = 0x3F4, // write-only
-    DATA_FIFO = 0x3F5,
-    DIGITAL_INPUT_REGISTER = 0x3F7,        // read-only
-    CONFIGURATION_CONTROL_REGISTER = 0x3F7 // write-only
-};
+#define FDC_STATUS_REGISTER_A 0x3F0 // read-only
+#define FDC_STATUS_REGISTER_B 0x3F1 // read-only
+#define FDC_DIGITAL_OUTPUT_REGISTER 0x3F2
+#define FDC_TAPE_DRIVE_REGISTER 0x3F3
+#define FDC_MAIN_STATUS_REGISTER 0x3F4     // read-only
+#define FDC_DATARATE_SELECT_REGISTER 0x3F4 // write-only
+#define FDC_DATA_FIFO 0x3F5
+#define FDC_DIGITAL_INPUT_REGISTER 0x3F7         // read-only
+#define FDC_CONFIGURATION_CONTROL_REGISTER 0x3F7 // write-only
+
+#define DMA_START_ADDRESS_REGISTER_CH_1 0x02  // write-only
+#define DMA_COUNT_REGISTER_CH_1 0x03          // write-only
+#define DMA_START_ADDRESS_REGISTER_CH_2 0x04  // write-only
+#define DMA_COUNT_REGISTER_CH_2 0x05          // write-only
+#define DMA_START_ADDRESS_REGISTER_CH_3 0x06  // write-only
+#define DMA_COUNT_REGISTER_CH_3 0x07          // write-only
+#define DMA_STATUS_REGISTER 0x08              // read-only
+#define DMA_COMMAND_REGISTER 0x08             // write-only
+#define DMA_REQUEST_REGISTER 0x09             // write-only
+#define DMA_SINGLE_CHANNEL_MASK_REGISTER 0x0a // write-only
+#define DMA_MODE_REGISTER 0x0b                // write-only
+#define DMA_FLIP_FLOP_RESET_REGISTER 0x0c     // write-only
+#define DMA_INTERMEDIAT_REGISTER 0x0d         // read-only
+#define DMA_MASTER_RESET_REGISTER 0x0d        // write-only
+#define DMA_MASK_RESET_REGISTER 0x0e          // write-only
+#define DMA_MULTICHANNEL_MASK_REGISTER 0x0f
+
+#define DMA_PAGE_ADDRESS_REGISTER_CH_1 0x83
+#define DMA_PAGE_ADDRESS_REGISTER_CH_2 0x81
+#define DMA_PAGE_ADDRESS_REGISTER_CH_3 0x82
 
 // Config
 #define SEEK_ENABLE 0

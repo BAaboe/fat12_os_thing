@@ -1,5 +1,8 @@
 // Copied from osdev, no reason to do work thats already done
 #include "pic/pic.h"
+#include "drivers/floppy.h"
+#include "print.h"
+#include "time.h"
 #include "util.h"
 #include <stdint.h>
 
@@ -17,8 +20,9 @@
 #define ICW4_BUF_SLAVE 0x08  /* Buffered mode/slave */
 #define ICW4_BUF_MASTER 0x0C /* Buffered mode/master */
 #define ICW4_SFNM 0x10       /* Special fully nested (not) */
-
 #define CASCADE_IRQ 2
+
+#define PIC_EOI 0x20
 
 /*
 arguments:
@@ -58,3 +62,27 @@ void PIC_disable(void) {
     outb(PIC1_DATA, 0xff);
     outb(PIC2_DATA, 0xff);
 }
+
+void pic_handler(uint16_t num) {
+    switch (num) {
+    case 0:
+        irq_tick();
+        break;
+    case 1:
+        inb(0x60);
+        break;
+
+    case 6:
+        irq6_handler();
+    default:
+        break;
+    }
+
+    if (num >= 8) {
+        outb(PIC2_COMMAND, PIC_EOI);
+    }
+    outb(PIC1_COMMAND, PIC_EOI);
+
+    return;
+}
+

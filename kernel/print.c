@@ -67,3 +67,47 @@ void print_string(char *string, uint8_t color) {
     update_screen();
 }
 
+void print_int(uint64_t num, uint8_t color) {
+    uint64_t tmp = num;
+    char string[21];
+
+    // Get num of digits
+    int i = 0;
+    while (tmp / 10 != 0) {
+        tmp /= 10;
+        i++;
+    }
+    string[i + 1] = '\0';
+    for (; i >= 0; i--) {
+        string[i] = (num % 10) + '0';
+        num /= 10;
+    }
+    print_string(string, color);
+}
+
+void print_hex(uint64_t num, uint8_t color) {
+    uint64_t tmp = num;
+    char string[19];
+    string[0] = '0';
+    string[1] = 'x';
+
+    // Get num of digits
+    int i = 0;
+    while (tmp / 16 != 0) {
+        tmp /= 16;
+        i++;
+    }
+    i += 2;
+    string[i + 1] = '\0';
+    for (; i >= 2; i--) {
+        uint8_t digit = num % 16;
+        if (digit >= 10) {
+            string[i] = (digit - 10) + 'A';
+        } else {
+            string[i] = (digit) + '0';
+        }
+
+        num /= 16;
+    }
+    print_string(string, color);
+}

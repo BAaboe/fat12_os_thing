@@ -30,7 +30,7 @@ build/%.o: %.asm
 
 kernel: $(KOBJS_SUBDIRS) $(KOBJS)
 	@echo "Linking kernel  -> " $(KERNEL_OUT)
-	@$(CC) $(CCFLAGS) $(KOBJS) -o $(KERNEL_OUT)
+	@$(CC) $(CCFLAGS) $(KOBJS) -o $(KERNEL_OUT) -lgcc
 
 
 bootloader:

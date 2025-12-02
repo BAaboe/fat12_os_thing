@@ -142,7 +142,7 @@ inc ax
 
 
 test di, di
-jz .loop
+jnz .loop
 ret
 
 .disk_error:
@@ -211,8 +211,14 @@ cli
 hlt
 
 happy:
+push ax
+push ds
+xor ax, ax
+mov ax, ds
 mov ax, happy_msg
 call print
+pop ds
+pop ax
 ret
 
 
@@ -229,15 +235,57 @@ db 0x55, 0xaa
 
 ;Might want to define some addresses for info to pass on to the kernel
 
+mm_error_msg: db "INT 15h AX=E820h not supported", 0
 %include "bootloader/gdt.asm"
 %include "bootloader/a20.asm"
 %include "bootloader/fat12.asm"
+
 
 stage2:
 call load_kernel
 
 ;Use bios to find info about system
 ;TODO
+
+; Get memory map
+mov ax, memory_map_seg
+mov es, ax
+mov di, memory_map_offset
+
+xor bp, bp
+add di, 24 ; First entry contains the number of entries
+
+; Magic number :)
+mov edx, 0x534D4150
+xor ebx, ebx
+
+.mm_loop:
+mov ecx, 24
+; Some BIOSes needs the top 16bits of eax to be zero
+xor eax, eax
+mov ax, 0xE820
+int 0x15
+jc .mm_carry
+inc bp
+add di, 24
+test ebx, ebx
+jnz .mm_loop
+
+.mm_carry:
+cmp ah, 0x86
+jne .mm_done
+
+; Don't want to end up here
+xor ax, ax
+mov ds, ax
+mov ax, mm_error_msg
+call print
+cli
+hlt
+
+.mm_done:
+mov di, memory_map_offset
+mov [es:di], bp
 
 ;Enter 32 bit
 cli
@@ -279,3 +327,6 @@ cluster: dw 0
 
 times 2048-($-$$) db 0
 buffer:
+
+memory_map_seg equ 0x2000
+memory_map_offset equ 0x0000

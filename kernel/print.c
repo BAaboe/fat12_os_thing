@@ -17,6 +17,8 @@ void init_screen(void) {
     for (unsigned int i = 0; i < CHARACTERS_PER_LINE * LINES; i++) {
         buffer[i] = 0x0020;
     }
+    outb(0x3d4, 0x0a);
+    outb(0x3d5, 0x20);
     update_screen();
 }
 
@@ -69,7 +71,7 @@ void print_string(char *string, uint8_t color) {
 
 void print_int(uint64_t num, uint8_t color) {
     uint64_t tmp = num;
-    char string[21];
+    char string[21] = {[0 ... 20] = 0};
 
     // Get num of digits
     int i = 0;

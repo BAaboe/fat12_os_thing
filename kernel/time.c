@@ -1,15 +1,11 @@
 #include "time.h"
 
-void irq_tick() {
-    ticks++;
-}
+static volatile uint32_t ticks = 0;
 
-uint64_t get_ticks() {
-    return ticks;
-}
-float get_milis() {
-    return (float)(ticks)*MS_PER_TICK;
-}
+void irq_tick() { ticks++; }
+
+uint64_t get_ticks() { return ticks; }
+float get_milis() { return (float)(ticks)*MS_PER_TICK; }
 
 void wait(float millis) {
     float start_time = get_milis();

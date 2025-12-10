@@ -2,16 +2,20 @@ KERNEL_OUT := build/kernel/kernel.bin
 IMAGE := fat_bilde.img
 
 CC := ~/opt/cross/bin/i686-elf-gcc
-CCFLAGS := -ffreestanding -nostdlib -nostartfiles -fno-stack-protector -fno-PIC -g -I include/ -m32 -T kernel/kernel.ld
+CCFLAGS := -ffreestanding -nostdlib -nostartfiles -fno-stack-protector -fno-PIC -MMD -MP -I include/ -m32 -T kernel/kernel.ld
 
 BSRC := bootloader/bootloader.asm
 BOBJ := build/bootloader/bootloader.o
 
 KSRC_SUBDIRS := $(wildcard kernel/*/)
 KOBJS_SUBDIRS := $(patsubst %/, build/%/, $(KSRC_SUBDIRS))
+# KHEADERS_SUBDIRS := $(patsubst %/, include/%/, $(KSRC_SUBDIRS))
 KCFILES := $(wildcard kernel/*.c) $(foreach d,$(KSRC_SUBDIRS), $(wildcard $(d)*.c))
+# KHEADERS := $(wildcard include/*.c) $(foreach d,$(KHEADERS_SUBDIRS), $(wildcard $(d)*.h))
 KASMFILES := $(wildcard kernel/*.asm) $(foreach d,$(KSRC_SUBDIRS), $(wildcard $(d)*.asm))
 KOBJS := $(patsubst %.asm, build/%.o, $(KASMFILES)) $(patsubst %.c, build/%.o, $(KCFILES))
+KDEPS := $(patsubst %.c, build/%.d, $(KCFILES))
+
 
 .PHONY: all fat kernel bootloader image clean test
 
@@ -24,6 +28,8 @@ build/%.o: %.c
 	@echo "Compiling C file" $< " -> " $@
 	@$(CC) $(CCFLAGS) -c $< -o $@
 
+-include $(KDEPS)
+
 build/%.o: %.asm
 	@echo "Compiling assembly file" $< " -> " $@
 	@nasm -f elf32 $< -o $@
@@ -33,7 +39,7 @@ kernel: $(KOBJS_SUBDIRS) $(KOBJS)
 	@$(CC) $(CCFLAGS) $(KOBJS) -o $(KERNEL_OUT) -lgcc
 
 
-bootloader:
+bootloader: $(BSRC)
 	@echo "Compiling bootloader  -> " $(BOBJ)
 	@mkdir -p build/bootloader
 	@nasm -f bin $(BSRC) -o $(BOBJ)
